@@ -12,8 +12,9 @@ Play directly in your browser (desktop or phone) via GitHub Pages:
 ### Controls
 
 #### Mobile / Touchscreen (Portrait & Landscape)
-- **Left Virtual Thumbstick**: Drag anywhere in the bottom-left zone to move smoothly; push to the outer ring (or hold **» RUN**) to sprint.
-- **Right Free-Look Pad**: Drag anywhere on the right half of the screen to look around freely (full multi-touch while moving).
+- **Left Virtual Thumbstick**: Drag anywhere in the bottom-left zone to move smoothly; push to the outer ring or tap **`» RUN`** to sprint.
+- **`» RUN` (Toggle)**: Tap once to lock sprint **ON** (`RUN ON`) so your right thumb stays completely free to look around; tap again to turn sprint **OFF**.
+- **Right Free-Look Pad**: Drag anywhere on the right half of the screen to look around freely (full multi-touch while moving/running).
 - **Hold `⚒ DIG`**: Mine soft/slate rock seams or strike timber supports (3 strikes collapse a bay); drag while holding to aim.
 - **Hold `◎ LISTEN`**: Stand still, amplify footsteps/breathing in the dark, and drag to turn until the candle smoke curls back toward you (pointing toward the exit shaft).
 - **`⛭ HIDE / LEAVE / WIND`**: Contextual button — tap near an ore cart to hide inside, or hold at the exit hoist to crank the lift.

@@ -1481,6 +1481,7 @@ body.inside-cart #touchMoveZone,body.inside-cart #touchDigBtn,body.inside-cart #
 .touch-act.touch-dig .ta-ico{font-size:21px}
 .touch-act .ta-lbl{font:800 8.5px/1.1 system-ui,sans-serif;letter-spacing:.11em;margin-top:3px;text-transform:uppercase}
 .touch-act:active,.touch-act.held{transform:scale(.93);background:radial-gradient(circle,rgba(82,57,33,.88),rgba(20,16,13,.92));border-color:#f6b969;color:#fff3dc;box-shadow:0 0 22px rgba(246,185,105,.36)}
+.touch-act.touch-run.toggled{background:radial-gradient(circle,rgba(96,62,28,.92),rgba(24,16,11,.95));border-color:#f6b969;color:#fff4df;box-shadow:0 0 22px rgba(246,185,105,.42),inset 0 0 12px rgba(246,185,105,.22)}
 .touch-act.touch-listen.held{background:radial-gradient(circle,rgba(36,68,66,.88),rgba(10,18,19,.92));border-color:#9bd6cc;color:#e6fffb;box-shadow:0 0 22px rgba(155,214,204,.35)}
 .touch-act.ready{border-color:#f6b969;box-shadow:0 0 18px rgba(246,185,105,.28);animation:touchPulse 1.5s ease-in-out infinite}
 .touch-act.touch-use{opacity:.35}
@@ -1659,7 +1660,7 @@ body.touch-mode #mapWrap canvas{width:100%;height:auto}
     <div id="touchLookZone" aria-hidden="true"></div>
     <div id="touchMoveZone" aria-label="Movement thumbstick">
       <div id="touchStickBase"><div id="touchStickSprintRing"></div><div id="touchStickKnob"></div></div>
-      <div id="touchMoveHint">DRAG TO MOVE · EDGE TO SPRINT</div>
+      <div id="touchMoveHint">DRAG TO MOVE · TAP » RUN TO SPRINT</div>
     </div>
     <div id="touchTopBar" role="toolbar" aria-label="Equipment and menu">
       <button id="touchCandleBtn" class="touch-util lit" type="button" aria-label="Toggle candle"><span class="tu-ico">🕯</span><span class="tu-lbl">FLAME</span></button>
@@ -1671,7 +1672,7 @@ body.touch-mode #mapWrap canvas{width:100%;height:auto}
     <div id="touchActionPad" role="group" aria-label="Survival actions">
       <button id="touchUseBtn" class="touch-act touch-use" type="button" aria-label="Interact with cart or hoist"><span class="ta-ico" id="touchUseIco">⛭</span><span class="ta-lbl" id="touchUseLbl">HIDE</span></button>
       <button id="touchListenBtn" class="touch-act touch-listen" type="button" aria-label="Hold to stand still and listen"><span class="ta-ico">◎</span><span class="ta-lbl">LISTEN</span></button>
-      <button id="touchRunBtn" class="touch-act touch-run" type="button" aria-label="Hold to sprint"><span class="ta-ico">»</span><span class="ta-lbl">RUN</span></button>
+      <button id="touchRunBtn" class="touch-act touch-run" type="button" aria-pressed="false" aria-label="Toggle sprint"><span class="ta-ico">»</span><span class="ta-lbl" id="touchRunLbl">RUN</span></button>
       <button id="touchDigBtn" class="touch-act touch-dig" type="button" aria-label="Hold to dig rock or strike timber"><span class="ta-ico">⚒</span><span class="ta-lbl" id="touchDigLbl">DIG</span></button>
     </div>
   </div>
@@ -5354,7 +5355,7 @@ function v20SetShadowUniforms(){
       v12NextBreath=now+Math.max(1.3,(m.kind==='skitter'?1.6:2.8)+Math.random()*2.2);
     }
   }
-  function end(success,title,detail,creatureKind=null){S.ended=true;S.playing=false;S.win=success;clearTouchInputs();
+  function end(success,title,detail,creatureKind=null){S.ended=true;S.playing=false;S.win=success;clearTouchInputs(true);
     clearTimeout(S.finishTimer);
     const finish=$('finish'),rush=$('deathRush');
     finish.classList.add('hidden');
@@ -5386,7 +5387,7 @@ function v20SetShadowUniforms(){
     for(const mesh of v31Scars.values())if(gl&&mesh?.buf)gl.deleteBuffer(mesh.buf);
     v31Scars.clear();v19DamageMesh=null;v19DamageKey='';v19DamageTarget=null;
     clearTimeout(S.finishTimer);$('deathRush')?.classList.remove('active');stressAccum=0;roofProbeClock=0;roofCueClock=0;document.body.classList.remove('inside-cart');soundAt=0;nearBeats=0;wetAmbienceAt=0;railAmbienceAt=0;
-    v12NextEvent=0;v12NextBreath=0;clearTouchInputs();
+    v12NextEvent=0;v12NextBreath=0;clearTouchInputs(true);
     if(audio&&audioEnabled){audio.subGain?.gain.setTargetAtTime(.04,audio.ctx.currentTime,.08);audio.droneGain?.gain.setTargetAtTime(.065,audio.ctx.currentTime,.08);}$('liftPrompt').classList.add('hidden');generate();worldBuild();$('finish').classList.add('hidden');$('intro').classList.add('hidden');
     $('pause').classList.add('hidden');$('hud').classList.remove('hidden');$('mapWrap').classList.add('hidden');
     $('hud').style.opacity='1';$('escapeScene').classList.add('hidden');startPrologue();
@@ -5451,24 +5452,32 @@ function v20SetShadowUniforms(){
       if(e.code==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();v32SetStory(v32StoryIndex-1);}
     }
   });
-  function clearTouchInputs(){
+  function syncRunToggleUI(){
+    const runBtn=$('touchRunBtn'),runLbl=$('touchRunLbl'),on=!!S.touch?.runBtn;
+    if(runBtn){runBtn.classList.toggle('toggled',on);runBtn.setAttribute('aria-pressed',on?'true':'false');}
+    if(runLbl)runLbl.textContent=on?'RUN ON':'RUN';
+  }
+  function clearTouchInputs(resetToggles=false){
     if(!S.touch)return;
-    S.touch.x=0;S.touch.y=0;S.touch.sprint=false;S.touch.runBtn=false;S.touch.stickSprint=false;
+    S.touch.x=0;S.touch.y=0;S.touch.stickSprint=false;
+    if(resetToggles)S.touch.runBtn=false;
+    S.touch.sprint=!!S.touch.runBtn;
     S.touch.dig=false;S.touch.listen=false;S.touch.interact=false;
     S.touch.moveId=null;S.touch.lookId=null;
     const base=$('touchStickBase'),knob=$('touchStickKnob');
     if(base){base.classList.remove('engaged','sprinting');base.style.left='';base.style.top='';base.style.bottom='';}
     if(knob)knob.style.transform='translate3d(0,0,0)';
     for(const id of ['touchDigBtn','touchListenBtn','touchRunBtn','touchUseBtn'])$(id)?.classList.remove('held');
+    syncRunToggleUI();
   }
   function enableTouchMode(){
     if(!S.touch||S.touch.active)return;
     S.touch.active=true;
     document.body.classList.add('touch-mode');
     const foot=document.querySelector('#intro .footer-left span:first-child');
-    if(foot)foot.textContent='LEFT THUMB MOVE · RIGHT DRAG LOOK · HOLD ◎ LISTEN';
+    if(foot)foot.textContent='LEFT THUMB MOVE · RIGHT DRAG LOOK · TAP » RUN';
     const pStats=document.querySelector('#pause .pause-stats');
-    if(pStats)pStats.textContent='LEFT STICK MOVE (EDGE = SPRINT) · RIGHT DRAG LOOK · HOLD ⚒ DIG · HOLD ◎ LISTEN · 🕯 CANDLE · 🧨 TNT · 🗺 MAP';
+    if(pStats)pStats.textContent='LEFT STICK MOVE · TAP » RUN TOGGLE SPRINT · RIGHT DRAG LOOK · HOLD ⚒ DIG · HOLD ◎ LISTEN · 🕯 CANDLE · 🧨 TNT · 🗺 MAP';
     const mapNote=$('mapFootNote');
     if(mapNote)mapNote.textContent='Gold: timber · Red: cave-in · Tap map to close';
     const storyHint=document.querySelector('#v10Brief .story-hint');
@@ -5476,7 +5485,7 @@ function v20SetShadowUniforms(){
     const helpGrid=$('v9HelpGrid');
     if(helpGrid&&!helpGrid.dataset.touchAdapted){
       helpGrid.dataset.touchAdapted='true';
-      helpGrid.innerHTML=`<div class="v9Control"><kbd>LEFT STICK</kbd><span>Move through galleries<small>Push to outer ring or hold » RUN to sprint</small></span></div><div class="v9Control"><kbd>RIGHT DRAG</kbd><span>Look around freely<small>Swipe anywhere on the right side (even while holding actions)</small></span></div><div class="v9Control"><kbd>HOLD ⚒ DIG</kbd><span>Dig rock or break timber<small>Excavates soft/slate seams · 3 strikes collapse a timber bay</small></span></div><div class="v9Control"><kbd>HOLD ◎ LISTEN</kbd><span>Stand still &amp; read the smoke<small>Turn while holding until candle smoke curls back toward you</small></span></div><div class="v9Control"><kbd>⛭ HIDE / WIND</kbd><span>Hide in cart or crank the lift<small>Tap near an ore cart to hide · Hold at the exit hoist to escape</small></span></div><div class="v9Control"><kbd>🕯 FLAME</kbd><span>Cover / uncover candle<small>Conserves wax &amp; hides light from the Mourner</small></span></div><div class="v9Control"><kbd>🧨 TNT</kbd><span>Plant rare TNT charge<small>Breaches solid basalt or seals pursuit · Retreat before blast</small></span></div><div class="v9Control"><kbd>🗺 MAP / ❚❚</kbd><span>Chalk map &amp; pause<small>Shows discovered galleries · Tap map again to close</small></span></div>`;
+      helpGrid.innerHTML=`<div class="v9Control"><kbd>LEFT STICK</kbd><span>Move through galleries<small>Tap » RUN to toggle sprint on/off (or push stick to outer ring)</small></span></div><div class="v9Control"><kbd>RIGHT DRAG</kbd><span>Look around freely<small>Swipe anywhere on the right side while moving or running</small></span></div><div class="v9Control"><kbd>TAP » RUN</kbd><span>Toggle sprint ON / OFF<small>Stays active hands-free so your right thumb stays free to look</small></span></div><div class="v9Control"><kbd>HOLD ⚒ DIG</kbd><span>Dig rock or break timber<small>Excavates soft/slate seams · 3 strikes collapse a timber bay</small></span></div><div class="v9Control"><kbd>HOLD ◎ LISTEN</kbd><span>Stand still &amp; read the smoke<small>Turn while holding until candle smoke curls back toward you</small></span></div><div class="v9Control"><kbd>⛭ HIDE / WIND</kbd><span>Hide in cart or crank the lift<small>Tap near an ore cart to hide · Hold at the exit hoist to escape</small></span></div><div class="v9Control"><kbd>🕯 FLAME / 🧨 TNT</kbd><span>Candle &amp; rare TNT charge<small>Cover flame to hide from the Mourner · Plant TNT to breach basalt</small></span></div><div class="v9Control"><kbd>🗺 MAP / ❚❚</kbd><span>Chalk map &amp; pause<small>Shows discovered galleries · Tap map again to close</small></span></div>`;
     }
   }
   function updateTouchHUD(rock,beam,liftNear,lit){
@@ -5487,6 +5496,7 @@ function v20SetShadowUniforms(){
     if(tntNum)tntNum.textContent=String(S.tnt);
     if(tntBtn)tntBtn.classList.toggle('dim',S.tnt<1||!!S.fuse||S.hidden);
     if(mapBtn)mapBtn.classList.toggle('lit',!!S.mapOpen);
+    syncRunToggleUI();
     if(digBtn&&digLbl){
       const canWork=!S.hidden&&((rock&&rock.cost<99)||!!beam);
       digBtn.classList.toggle('ready',canWork&&!S.touch.dig);
@@ -5655,7 +5665,12 @@ function v20SetShadowUniforms(){
 
     bindHoldButton($('touchDigBtn'),()=>{S.touch.dig=true;},()=>{S.touch.dig=false;});
     bindHoldButton($('touchListenBtn'),()=>{S.touch.listen=true;},()=>{S.touch.listen=false;});
-    bindHoldButton($('touchRunBtn'),()=>{S.touch.runBtn=true;S.touch.sprint=true;},()=>{S.touch.runBtn=false;S.touch.sprint=!!S.touch.stickSprint;});
+    bindHoldButton($('touchRunBtn'),()=>{
+      S.touch.runBtn=!S.touch.runBtn;
+      S.touch.sprint=!!(S.touch.runBtn||S.touch.stickSprint);
+      syncRunToggleUI();
+      stickBase?.classList.toggle('sprinting',S.touch.sprint&&Math.hypot(S.touch.x,S.touch.y)>.2);
+    },()=>{});
     bindHoldButton($('touchUseBtn'),()=>{
       if(!S.playing||S.ended||S.exiting)return;
       const atLift=dist(S.player,center(S.exit.x,S.exit.z))<2.25;
