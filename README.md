@@ -1,11 +1,11 @@
-# The Descent (THE MINE)
+# The Mine
 
-A 3D browser-based survival horror game.
+A 3D browser-based survival horror game featuring spatial occlusion acoustics and 62 real recorded CC0 horror & mine foley stems.
 
 ## Play Online
 
 Play directly in your browser via GitHub Pages:
-**[https://savinienb.github.io/The_Descent/](https://savinienb.github.io/The_Descent/)**
+**[https://savinienb.github.io/The_Mine/](https://savinienb.github.io/The_Mine/)**
 
 ---
 
