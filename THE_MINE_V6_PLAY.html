@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>THE MINE — A Survival Horror Game | Playable 3D</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#06090a"><title>THE MINE — A Survival Horror Game | Playable 3D</title>
 <style>
 /* Fully offline: system serif and sans-serif fallbacks, no external font requests. */
 :root{--amber:#f6b969;--gold:#d69c56;--cream:#f6ebd7;--faint:#b2aba0;--dark:#081017;--card:#10191f;--red:#b94f42;--teal:#9bd6cc;font-family:'DM Sans',Arial,sans-serif;color:var(--cream)}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#070d11}button{font-family:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}::selection{background:#cb8c4a;color:#0b1014}.hidden,[hidden]{display:none!important}
@@ -1448,6 +1448,105 @@ body.v29-working #pickaxeView.striking{display:block!important;visibility:visibl
 #escapeScene[data-stage="surface"] .cine-content{background:linear-gradient(90deg,rgba(247,243,232,.18),rgba(247,243,232,0));padding-right:20px}
 #escapeScene[data-stage="surface"] .cine-content h2{letter-spacing:-.03em}
 </style>
+<style id="v33-mobile-controls">
+html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+#viewport{height:100%;height:100dvh;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#world{touch-action:none}
+#touchControls{display:none;position:absolute;inset:0;z-index:14;pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.touch-mode #touchControls{display:block}
+body.inside-cart #touchMoveZone,body.inside-cart #touchDigBtn,body.inside-cart #touchRunBtn,body.inside-cart #touchListenBtn{opacity:.22}
+#touchLookZone{position:absolute;inset:0;z-index:1;pointer-events:auto;touch-action:none}
+#touchMoveZone{position:absolute;left:0;bottom:0;width:46%;height:64%;z-index:2;pointer-events:auto;touch-action:none}
+#touchStickBase{position:absolute;left:calc(20px + env(safe-area-inset-left,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px));width:112px;height:112px;border-radius:50%;background:radial-gradient(circle,rgba(18,22,25,.52) 0%,rgba(7,9,11,.76) 72%);border:1.5px solid rgba(216,182,135,.30);box-shadow:0 8px 28px rgba(0,0,0,.55),inset 0 0 18px rgba(0,0,0,.6);pointer-events:none;transition:opacity .2s,border-color .18s,box-shadow .18s}
+#touchStickBase.engaged{border-color:rgba(232,193,139,.58)}
+#touchStickBase.sprinting{border-color:rgba(246,185,105,.92);box-shadow:0 0 22px rgba(246,185,105,.32),inset 0 0 18px rgba(246,185,105,.18)}
+#touchStickSprintRing{position:absolute;inset:9px;border-radius:50%;border:1px dashed rgba(216,182,135,.18);pointer-events:none}
+#touchStickKnob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 36% 32%,rgba(236,204,160,.88),rgba(154,116,74,.78) 62%,rgba(48,36,26,.92));border:1px solid rgba(255,232,196,.55);box-shadow:0 4px 14px rgba(0,0,0,.65);transform:translate3d(0,0,0);pointer-events:none}
+#touchMoveHint{position:absolute;left:calc(20px + env(safe-area-inset-left,0px));bottom:calc(7px + env(safe-area-inset-bottom,0px));font:700 8px/1.2 system-ui,sans-serif;letter-spacing:.14em;color:rgba(218,195,164,.52);pointer-events:none;transition:opacity .4s}
+#touchMoveHint.hide{opacity:0}
+
+#touchTopBar{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:6;display:flex;align-items:center;gap:6px;pointer-events:auto;touch-action:none}
+.touch-util{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:46px;height:44px;padding:3px 7px;border-radius:8px;background:rgba(8,11,13,.72);border:1px solid rgba(214,180,134,.28);color:#d8c6ae;box-shadow:0 4px 14px rgba(0,0,0,.45);backdrop-filter:blur(4px);touch-action:none;transition:background .15s,border-color .15s,transform .1s,opacity .15s}
+.touch-util:active,.touch-util.held{transform:scale(.94);background:rgba(42,33,23,.85);border-color:rgba(246,185,105,.75)}
+.touch-util.lit{border-color:rgba(246,185,105,.58);color:#f8dfb8;box-shadow:0 0 14px rgba(243,168,77,.18)}
+.touch-util.dim{opacity:.38}
+.touch-util .tu-ico{font-size:14px;line-height:1.05}
+.touch-util .tu-lbl{font:700 8px/1.1 system-ui,sans-serif;letter-spacing:.10em;margin-top:2px;white-space:nowrap}
+.touch-util .tu-lbl b{color:#f6b969;font-weight:800}
+
+#touchActionPad{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:5;display:grid;grid-template-columns:64px 74px;grid-template-rows:64px 74px;gap:10px;align-items:end;justify-items:end;pointer-events:none;touch-action:none}
+.touch-act{pointer-events:auto;touch-action:none;width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 38% 32%,rgba(28,33,36,.80),rgba(8,11,13,.88));border:1.5px solid rgba(214,180,134,.34);color:#ead8be;box-shadow:0 6px 20px rgba(0,0,0,.58),inset 0 1px 1px rgba(255,235,205,.12);backdrop-filter:blur(4px);transition:transform .1s,border-color .16s,background .16s,box-shadow .16s,opacity .18s}
+.touch-act.touch-dig{width:74px;height:74px;border-width:2px;border-color:rgba(226,184,126,.46)}
+.touch-act .ta-ico{font-size:18px;line-height:1}
+.touch-act.touch-dig .ta-ico{font-size:21px}
+.touch-act .ta-lbl{font:800 8.5px/1.1 system-ui,sans-serif;letter-spacing:.11em;margin-top:3px;text-transform:uppercase}
+.touch-act:active,.touch-act.held{transform:scale(.93);background:radial-gradient(circle,rgba(82,57,33,.88),rgba(20,16,13,.92));border-color:#f6b969;color:#fff3dc;box-shadow:0 0 22px rgba(246,185,105,.36)}
+.touch-act.touch-listen.held{background:radial-gradient(circle,rgba(36,68,66,.88),rgba(10,18,19,.92));border-color:#9bd6cc;color:#e6fffb;box-shadow:0 0 22px rgba(155,214,204,.35)}
+.touch-act.ready{border-color:#f6b969;box-shadow:0 0 18px rgba(246,185,105,.28);animation:touchPulse 1.5s ease-in-out infinite}
+.touch-act.touch-use{opacity:.35}
+.touch-act.touch-use.ready{opacity:1;border-color:#9bd6cc;color:#ebfffb;box-shadow:0 0 22px rgba(155,214,204,.38)}
+.touch-act.touch-use.held{opacity:1;border-color:#f6b969;background:radial-gradient(circle,rgba(92,62,32,.92),rgba(18,14,11,.94))}
+@keyframes touchPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* Mobile HUD layout adjustments when touch controls are active */
+body.touch-mode #hud .v13-inventory,
+body.touch-mode #hud #controllerHint,
+body.touch-mode #hud .progress-foot,
+body.touch-mode #v9HelpToggle{display:none!important}
+body.touch-mode #hud .side-stats{top:calc(12px + env(safe-area-inset-top,0px))!important;left:calc(14px + env(safe-area-inset-left,0px))!important;bottom:auto!important;transform:scale(.82)!important;transform-origin:left top!important;opacity:.82!important;z-index:6}
+body.touch-mode #candleView{left:50%!important;right:auto!important;margin-left:-64px!important;bottom:-34px!important;transform:translate3d(var(--v15-hand-x,0px),var(--v15-hand-y,0px),0) rotate(calc(-12deg + var(--v15-hand-roll,0deg))) scale(.76)!important;transform-origin:50% 85%!important}
+body.touch-mode.v29-working #pickaxeView.striking{right:18vw!important;bottom:-88px!important;zoom:.82}
+body.touch-mode #v10Listen{bottom:clamp(138px,24vh,188px)!important}
+body.touch-mode #v9Action{bottom:clamp(160px,28vh,220px)!important;max-width:min(310px,64vw)!important;text-align:center}
+body.touch-mode #hud #liftPrompt{bottom:clamp(162px,28vh,224px)!important;width:min(300px,66vw)!important;pointer-events:auto!important;z-index:16!important;touch-action:none}
+body.touch-mode #v18Fuse{top:calc(62px + env(safe-area-inset-top,0px))!important;bottom:auto!important;right:auto!important;left:50%!important;transform:translateX(-50%)!important;z-index:18}
+body.touch-mode #mapWrap{top:calc(62px + env(safe-area-inset-top,0px))!important;right:calc(12px + env(safe-area-inset-right,0px))!important;bottom:auto!important;z-index:20!important;max-width:min(240px,72vw);cursor:pointer}
+body.touch-mode #mapWrap canvas{width:100%;height:auto}
+
+/* Portrait & short-landscape phone responsiveness for Intro, Modals & Story Reel */
+#intro .intro-left,.pause .modal-card,.finish .modal-card,#v9Help .inner,#notes,#v10Brief .story-shell{touch-action:pan-y;-webkit-overflow-scrolling:touch}
+@media(max-width:860px),(max-height:540px){
+  #intro .intro-left{overflow-y:auto!important;padding:max(18px,env(safe-area-inset-top,18px)) max(20px,env(safe-area-inset-right,20px)) max(18px,env(safe-area-inset-bottom,18px)) max(20px,env(safe-area-inset-left,20px))!important}
+  #intro .intro-left::before{inset:10px!important}
+  .pause,.finish{padding:12px!important}
+  .modal-card{max-height:92dvh;overflow-y:auto;padding:clamp(18px,4vw,34px)!important}
+  #v9Help{padding:12px!important}
+  #v9Help .inner{max-height:92dvh!important;padding:18px!important}
+  #v10Brief.story-reel .story-shell{max-height:94dvh;overflow-y:auto}
+}
+@media(max-width:480px){
+  #intro h1.brand{font-size:clamp(54px,16vw,84px)!important;margin:16px 0 18px!important}
+  #intro .description{font-size:14px!important;line-height:1.55!important;margin-bottom:18px!important}
+  #intro .tagline{margin:10px 0 18px!important}
+  #intro .btn{min-width:142px!important;min-height:48px!important;padding:13px 16px!important;font-size:10px!important}
+  #v9HelpGrid{grid-template-columns:1fr!important;gap:8px!important;margin:14px 0!important}
+  #touchStickBase{width:98px;height:98px;left:calc(14px + env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+  #touchStickKnob{width:40px;height:40px;margin:-20px 0 0 -20px}
+  #touchActionPad{grid-template-columns:58px 66px;grid-template-rows:58px 66px;gap:8px;right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  .touch-act{width:58px;height:58px}
+  .touch-act.touch-dig{width:66px;height:66px}
+  .touch-util{min-width:41px;height:40px;padding:2px 5px}
+  body.touch-mode #candleView{transform:translate3d(var(--v15-hand-x,0px),var(--v15-hand-y,0px),0) rotate(calc(-12deg + var(--v15-hand-roll,0deg))) scale(.66)!important;bottom:-42px!important}
+}
+@media(max-height:500px){
+  #intro .intro-left>div:first-child{padding:6px 0!important}
+  #intro .intro-left>div:first-child::before{margin-bottom:10px!important}
+  #intro h1.brand{font-size:clamp(40px,13vh,62px)!important;margin:8px 0 10px!important}
+  #intro .subtitle{margin:0 0 8px!important;font-size:10px!important}
+  #intro .description{font-size:13px!important;line-height:1.45!important;margin:0 0 12px!important;max-width:540px!important}
+  #intro .tagline{margin:6px 0 12px!important}
+  #intro .tag{padding:6px 8px!important;font-size:8px!important}
+  #intro .btn{min-height:42px!important;padding:10px 16px!important}
+  #intro .footer-left{padding-top:10px!important;margin-top:10px!important}
+  #touchStickBase{width:96px;height:96px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  #touchActionPad{grid-template-columns:56px 64px;grid-template-rows:56px 64px;gap:8px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  .touch-act{width:56px;height:56px}
+  .touch-act.touch-dig{width:64px;height:64px}
+  body.touch-mode #candleView{transform:translate3d(var(--v15-hand-x,0px),var(--v15-hand-y,0px),0) rotate(calc(-12deg + var(--v15-hand-roll,0deg))) scale(.64)!important;bottom:-46px!important}
+  body.touch-mode #v10Listen{bottom:96px!important}
+  body.touch-mode #v9Action,body.touch-mode #hud #liftPrompt{bottom:112px!important}
+}
+</style>
 </head>
 <body><main id="viewport">
 <div id="cartVision" aria-hidden="true"></div><div id="v18Fuse" aria-label="Dynamite countdown"></div><canvas id="world" aria-label="First-person 3D mine survival game"></canvas>
@@ -1555,7 +1654,27 @@ body.v29-working #pickaxeView.striking{display:block!important;visibility:visibl
 <path d="M31 171 Q37 175 44 175 M26 181 Q39 185 48 190" stroke-dasharray="2 4"/>
 </g><path d="M33 163 Q47 155 56 164" stroke="#151412" stroke-opacity=".58" stroke-width="2" fill="none"/>
 </svg><canvas id="v24Smoke" width="504" height="602" aria-hidden="true"></canvas></div>
-  <div id="mapWrap" class="hidden"><div class="tiny">CHALK MAP / DISCOVERED ONLY</div><canvas id="mapCanvas" width="228" height="228"></canvas><p>Gold: timber / Red: cave-in</p></div>
+  <div id="mapWrap" class="hidden"><div class="tiny">CHALK MAP / DISCOVERED ONLY</div><canvas id="mapCanvas" width="228" height="228"></canvas><p id="mapFootNote">Gold: timber / Red: cave-in</p></div>
+  <div id="touchControls" aria-label="Touch controls">
+    <div id="touchLookZone" aria-hidden="true"></div>
+    <div id="touchMoveZone" aria-label="Movement thumbstick">
+      <div id="touchStickBase"><div id="touchStickSprintRing"></div><div id="touchStickKnob"></div></div>
+      <div id="touchMoveHint">DRAG TO MOVE · EDGE TO SPRINT</div>
+    </div>
+    <div id="touchTopBar" role="toolbar" aria-label="Equipment and menu">
+      <button id="touchCandleBtn" class="touch-util lit" type="button" aria-label="Toggle candle"><span class="tu-ico">🕯</span><span class="tu-lbl">FLAME</span></button>
+      <button id="touchTntBtn" class="touch-util" type="button" aria-label="Plant TNT"><span class="tu-ico">🧨</span><span class="tu-lbl">TNT <b id="touchTntNum">1</b></span></button>
+      <button id="touchMapBtn" class="touch-util" type="button" aria-label="Toggle chalk map"><span class="tu-ico">🗺</span><span class="tu-lbl">MAP</span></button>
+      <button id="touchHelpBtn" class="touch-util" type="button" aria-label="Field notes"><span class="tu-ico">?</span><span class="tu-lbl">NOTES</span></button>
+      <button id="touchPauseBtn" class="touch-util" type="button" aria-label="Pause game"><span class="tu-ico">❚❚</span><span class="tu-lbl">PAUSE</span></button>
+    </div>
+    <div id="touchActionPad" role="group" aria-label="Survival actions">
+      <button id="touchUseBtn" class="touch-act touch-use" type="button" aria-label="Interact with cart or hoist"><span class="ta-ico" id="touchUseIco">⛭</span><span class="ta-lbl" id="touchUseLbl">HIDE</span></button>
+      <button id="touchListenBtn" class="touch-act touch-listen" type="button" aria-label="Hold to stand still and listen"><span class="ta-ico">◎</span><span class="ta-lbl">LISTEN</span></button>
+      <button id="touchRunBtn" class="touch-act touch-run" type="button" aria-label="Hold to sprint"><span class="ta-ico">»</span><span class="ta-lbl">RUN</span></button>
+      <button id="touchDigBtn" class="touch-act touch-dig" type="button" aria-label="Hold to dig rock or strike timber"><span class="ta-ico">⚒</span><span class="ta-lbl" id="touchDigLbl">DIG</span></button>
+    </div>
+  </div>
 </div>
 <section id="prologue" class="cinematic hidden" aria-label="Opening: fall into the mine"><div class="splitbeam"></div><div class="dust"></div><div class="cine-shaft"><div class="shaft-back"></div><div class="shaft-arch arch-one"></div><div class="shaft-arch arch-two"></div><div class="shaft-arch arch-three"></div><div class="fall-hole"></div><div class="fall-miner"><div class="miner-head"></div><div class="miner-torso"></div><div class="miner-arm left"></div><div class="miner-arm right"></div><div class="miner-flame"></div></div><div class="shatter-pieces"></div></div><div class="cine-content"><div class="cine-number">1891 / THE LOWER WORKINGS · SHIFT 17</div><h2 id="prologueText">SHIFT 17</h2><p id="prologueSub">One moment, solid rock. The next, nothing.</p><div class="cine-skip" id="prologueSkip">SPACE / ENTER / A — SKIP</div></div></section>
 <section id="escapeScene" class="cinematic hidden" aria-label="Escaping into daylight"><div class="sun"></div><div id="v13Daybreak" aria-hidden="true"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -1705,7 +1824,7 @@ EMBEDDED REAL RECORDED AUDIO (100% CC0 PUBLIC DOMAIN — ZERO GENERATED / SYNTHE
   // If WebGL is disabled, use the built-in first-person software perspective renderer.
   const SIZE=27, STEP=4, H=3.35, MAX_DIG=14, MAX_BEAMS=4;
   const START={x:Math.floor(SIZE/2),z:Math.floor(SIZE/2)};
-  const S = { started:false, playing:false, paused:true, ended:false, win:false, elapsed:0, yaw:0, pitch:0, player:{x:0,z:0}, stamina:100, wax:100, candle:true, picks:Infinity, beams:0, tnt:1, fuse:null, bombDust:0, dug:0, collapses:0, finds:0, seen:new Set(), start:{x:START.x,z:START.z}, exit:{x:25,z:25}, monsters:[], gamepad:{active:false,x:0,y:0,lookX:0,lookY:0,sprint:false,dig:false,prev:[]}, prologue:false, exiting:false, phase:0, flameLean:0, candleFear:0, candleIntensity:1, candleOutput:1, listenBlend:0, threatFlutter:0, deathRush:null, finishTimer:null, keys:{}, mouse:false, progress:0, progressKey:'', rockCuts:new Map(), shake:0, overlayFlash:0, hurt:0, steps:0, toastT:0, aim:null, supportAim:null, rumbleT:0, mapOpen:false, timeLast:0, pickups:0, trapSeconds:0, trapCheck:0, loud:0, liftTimer:0, liftCalled:false, liftClutch:false, dread:0, directorClock:0, scareClock:0, roofCreakClock:0, warningTick:0, particles:[], particleClock:0, noisePos:null, noiseTime:0, quietTime:0, chaseStreak:0, highestDread:0, scareEvents:0, liftBlockedMsg:0, listening:false, listenTime:0, hidden:false, hidingCart:null, hiddenTime:0, hideStart:0, hideBreath:0, startShaftBroken:false };
+  const S = { started:false, playing:false, paused:true, ended:false, win:false, elapsed:0, yaw:0, pitch:0, player:{x:0,z:0}, stamina:100, wax:100, candle:true, picks:Infinity, beams:0, tnt:1, fuse:null, bombDust:0, dug:0, collapses:0, finds:0, seen:new Set(), start:{x:START.x,z:START.z}, exit:{x:25,z:25}, monsters:[], gamepad:{active:false,x:0,y:0,lookX:0,lookY:0,sprint:false,dig:false,prev:[]}, touch:{active:false,x:0,y:0,sprint:false,runBtn:false,stickSprint:false,dig:false,listen:false,interact:false,moveId:null,lookId:null,lookLastX:0,lookLastY:0}, prologue:false, exiting:false, phase:0, flameLean:0, candleFear:0, candleIntensity:1, candleOutput:1, listenBlend:0, threatFlutter:0, deathRush:null, finishTimer:null, keys:{}, mouse:false, progress:0, progressKey:'', rockCuts:new Map(), shake:0, overlayFlash:0, hurt:0, steps:0, toastT:0, aim:null, supportAim:null, rumbleT:0, mapOpen:false, timeLast:0, pickups:0, trapSeconds:0, trapCheck:0, loud:0, liftTimer:0, liftCalled:false, liftClutch:false, dread:0, directorClock:0, scareClock:0, roofCreakClock:0, warningTick:0, particles:[], particleClock:0, noisePos:null, noiseTime:0, quietTime:0, chaseStreak:0, highestDread:0, scareEvents:0, liftBlockedMsg:0, listening:false, listenTime:0, hidden:false, hidingCart:null, hiddenTime:0, hideStart:0, hideBreath:0, startShaftBroken:false };
   let fallbackFailures=0, lastRoofNoise=-100;
   let visibilityTexture=null, lightCacheKey='', visibleData=null, textureReady=false;
   const VISSIZE=SIZE;
@@ -4384,8 +4503,9 @@ function v20SetShadowUniforms(){
     if(S.elapsed>15&&!S.monsters.some(m=>m.kind==='stalker')&&S.spawnNext.stalker<=S.elapsed)spawnCreature('stalker');
     if(S.elapsed>25&&(S.dug>=1||S.elapsed>45)&&!S.monsters.some(m=>m.kind==='skitter')&&S.spawnNext.skitter<=S.elapsed)spawnCreature('skitter');
     if(S.elapsed>49&&!S.monsters.some(m=>m.kind==='mourner')&&S.spawnNext.mourner<=S.elapsed)spawnCreature('mourner');
-    const footsteps=!S.listening&&!!(S.keys.KeyW||S.keys.KeyA||S.keys.KeyS||S.keys.KeyD||S.keys.ArrowUp||S.keys.ArrowDown||Math.abs(S.gamepad.x)+Math.abs(S.gamepad.y)>.20);
-    const running=footsteps&&(S.keys.ShiftLeft||S.keys.ShiftRight||S.gamepad.sprint)&&S.stamina>0;
+    const touchMag=S.touch?Math.hypot(S.touch.x,S.touch.y):0;
+    const footsteps=!S.listening&&!!(S.keys.KeyW||S.keys.KeyA||S.keys.KeyS||S.keys.KeyD||S.keys.ArrowUp||S.keys.ArrowDown||Math.abs(S.gamepad.x)+Math.abs(S.gamepad.y)>.20||touchMag>.20);
+    const running=footsteps&&(S.keys.ShiftLeft||S.keys.ShiftRight||S.gamepad.sprint||S.touch?.sprint)&&S.stamina>0;
     for(const m of S.monsters){
       if(!m.active)continue;
       const d=dist(m,S.player),sk=m.kind==='skitter',pale=m.kind==='mourner';
@@ -4819,9 +4939,10 @@ function v20SetShadowUniforms(){
     if(a.KeyW||a.ArrowUp){dx+=f.x;dz+=f.z;}if(a.KeyS||a.ArrowDown){dx-=f.x;dz-=f.z;}
     if(a.KeyA){dx-=right.x;dz-=right.z;}if(a.KeyD){dx+=right.x;dz+=right.z;}
     dx+=f.x*(-S.gamepad.y)+right.x*S.gamepad.x;dz+=f.z*(-S.gamepad.y)+right.z*S.gamepad.x;
-    let len=Math.hypot(dx,dz),running=!S.listening&&len>0&&(a.ShiftLeft||a.ShiftRight||S.gamepad.sprint)&&S.stamina>2;
-    if(running)S.stamina=Math.max(0,S.stamina-29*dt);else S.stamina=Math.min(100,S.stamina+(S.mouse||S.gamepad.dig?0:15.5)*dt);
-    if(len>0){dx/=len;dz/=len;let sp=(S.listening?0:running?5.35:2.76)*dt;let oldX=S.player.x,oldZ=S.player.z;
+    if(S.touch){dx+=f.x*(-S.touch.y)+right.x*S.touch.x;dz+=f.z*(-S.touch.y)+right.z*S.touch.x;}
+    let len=Math.hypot(dx,dz),running=!S.listening&&len>0&&(a.ShiftLeft||a.ShiftRight||S.gamepad.sprint||S.touch?.sprint)&&S.stamina>2;
+    if(running)S.stamina=Math.max(0,S.stamina-29*dt);else S.stamina=Math.min(100,S.stamina+(S.mouse||S.gamepad.dig||S.touch?.dig?0:15.5)*dt);
+    if(len>0){const analog=Math.min(1,len);dx/=len;dz/=len;let sp=(S.listening?0:running?5.35:2.76*analog)*dt;let oldX=S.player.x,oldZ=S.player.z;
       if(isWalkable(S.player.x+dx*sp,S.player.z))S.player.x+=dx*sp;
       if(isWalkable(S.player.x,S.player.z+dz*sp))S.player.z+=dz*sp;
       if(dist({x:oldX,z:oldZ},S.player)>.001){S.steps+=dt*(running?17:10);if(audioEnabled&&S.elapsed-lastStepSfx>(running?.37:.58)){cue('step');lastStepSfx=S.elapsed;}}
@@ -4987,10 +5108,12 @@ function v20SetShadowUniforms(){
     $('danger').classList.toggle('active',!!(roofAlert||((nearestThreat()&&dist(nearestThreat(),S.player)<8))));
     const rock=getRockAim(),beam=getSupportAim();S.aim=rock;S.supportAim=beam;
     const liftNear=dist(S.player,center(S.exit.x,S.exit.z))<2.4;
-    $('target').textContent=S.hidden?'E / A — LEAVE CART':!liftNear&&nearestCart()?'E / A — HIDE IN CART':liftNear?'HOLD E / A — WIND LIFT':rock?(rock.cost>=99?'DARK BASALT · TNT ONLY':rock.c.t===2?`CLEAR CAVE-IN · ${rock.cost} CHARGES`:rock.hardness===1?'SOFT OCHRE ROCK':'HARD SLATE'):beam?'HOLD LMB / RT · STRIKE TIMBER':' ';
+    const touchOn=!!S.touch?.active,working=!S.hidden&&(S.mouse||S.gamepad.dig||S.touch?.dig);
+    $('target').textContent=S.hidden?(touchOn?'TAP LEAVE — EXIT CART':'E / A — LEAVE CART'):!liftNear&&nearestCart()?(touchOn?'TAP HIDE — ENTER CART':'E / A — HIDE IN CART'):liftNear?(touchOn?'HOLD WIND — CRANK LIFT':'HOLD E / A — WIND LIFT'):rock?(rock.cost>=99?'DARK BASALT · TNT ONLY':rock.c.t===2?`CLEAR CAVE-IN · ${rock.cost} CHARGES`:rock.hardness===1?'SOFT OCHRE ROCK':'HARD SLATE'):beam?(touchOn?'HOLD DIG · STRIKE TIMBER':'HOLD LMB / RT · STRIKE TIMBER'):' ';
     $('target').classList.toggle('highlight',!!rock||!!beam);
     $('crosshair').classList.toggle('active',!!rock||!!beam);
-    $('pickaxeView').classList.toggle('striking',!S.hidden&&(S.mouse||S.gamepad.dig));document.body.classList.toggle('v29-working',!S.hidden&&(S.mouse||S.gamepad.dig)&&!!(rock||beam));$('pickaxeView').style.setProperty('--strike',Math.max(0,1-(S.elapsed-(S.pickImpactAt||-20))/.34).toFixed(3));$('digbar').style.opacity=S.progress>.01?'1':'0';$('digfill').style.width=Math.round(S.progress*100)+'%';
+    $('pickaxeView').classList.toggle('striking',working);document.body.classList.toggle('v29-working',working&&!!(rock||beam));
+    updateTouchHUD(rock,beam,liftNear,lit);$('pickaxeView').style.setProperty('--strike',Math.max(0,1-(S.elapsed-(S.pickImpactAt||-20))/.34).toFixed(3));$('digbar').style.opacity=S.progress>.01?'1':'0';$('digfill').style.width=Math.round(S.progress*100)+'%';
     $('candleView').classList.toggle('off',visuallyLit<.055); $('candleBlackout').style.opacity=(1-visuallyLit).toFixed(3);const fuseClock=$('v18Fuse');if(fuseClock){fuseClock.classList.toggle('active',!!S.fuse);fuseClock.textContent=S.fuse?Math.max(0,S.fuse.t).toFixed(1)+'s':'';}
     const v22Nearest=nearestThreat(),closeness=v22Nearest?Math.max(0,1-dist(v22Nearest,S.player)/12):0;
     $('threatVeil').style.opacity=Math.min(.56,S.hurt*.48+.26*closeness);
@@ -5039,10 +5162,10 @@ function v20SetShadowUniforms(){
   function updateLift(dt){
     const d=dist(S.player,center(S.exit.x,S.exit.z));
     const atLift=d<2.25;
-    const winding=!S.hidden&&atLift&&(!!S.keys.KeyE||!!S.gamepad.interact);
+    const winding=!S.hidden&&atLift&&(!!S.keys.KeyE||!!S.gamepad.interact||!!S.touch?.interact);
     $('liftPrompt').classList.toggle('hidden',!atLift);
     if(!atLift){S.liftTimer=Math.max(0,S.liftTimer-dt*.30);return;}
-    if(!S.liftCalled){S.liftCalled=true;msg('THE HOIST. Its hand crank is seized. Hold E / A to wind it!',true);cue('liftalarm');}
+    if(!S.liftCalled){S.liftCalled=true;msg(S.touch?.active?'THE HOIST. Its hand crank is seized. Hold WIND to crank it!':'THE HOIST. Its hand crank is seized. Hold E / A to wind it!',true);cue('liftalarm');}
     if(winding){
       if(!S.liftClutch){S.liftClutch=true;S.loud=7;S.shake=Math.max(S.shake,.1);cue('crank');}
       S.liftTimer=Math.min(5.4,S.liftTimer+dt);S.loud=Math.max(S.loud,4.8);
@@ -5052,7 +5175,7 @@ function v20SetShadowUniforms(){
       S.liftClutch=false;S.liftTimer=Math.max(0,S.liftTimer-dt*.12);
     }
     $('liftPrompt').querySelector('.liftFill').style.width=(S.liftTimer/5.4*100).toFixed(2)+'%';
-    $('liftPrompt').querySelector('.liftInstruction').textContent=winding?'KEEP WINDING — THEY CAN HEAR IT':'HOLD E / A · WIND THE LIFT';
+    $('liftPrompt').querySelector('.liftInstruction').textContent=winding?'KEEP WINDING — THEY CAN HEAR IT':(S.touch?.active?'HOLD WIND · CRANK THE LIFT':'HOLD E / A · WIND THE LIFT');
     // Loud machinery invites every active creature to investigate the shaft.
     if(S.liftTimer>1.5&&S.monsters.length<2&&S.spawnNext?.stalker!==undefined){
       if(!S.monsters.some(m=>m.kind==='stalker'))spawnCreature('stalker');
@@ -5063,7 +5186,7 @@ function v20SetShadowUniforms(){
     S.elapsed+=dt;S.shake=Math.max(0,S.shake-dt*1.4);S.overlayFlash=Math.max(0,S.overlayFlash-dt*2.2);S.hurt=Math.max(0,S.hurt-dt*.85);
     if(S.candle&&S.wax>0){
       // High airflow consumes wax faster, so sheltering or extinguishing the flame matters.
-      const wind=sampleWind(),hurried=!!(S.keys.ShiftLeft||S.keys.ShiftRight||S.gamepad.sprint);
+      const wind=sampleWind(),hurried=!!(S.keys.ShiftLeft||S.keys.ShiftRight||S.gamepad.sprint||S.touch?.sprint);
       const burn=.29+wind.speed*.18+(hurried?.08:0);
       S.wax=Math.max(0,S.wax-dt*burn*.66);
       if(S.wax===0){cue('dry');}
@@ -5080,11 +5203,11 @@ function v20SetShadowUniforms(){
     const candleTarget=(S.candle&&S.wax>0)?1:0;
     S.candleOutput+=(candleTarget-(S.candleOutput??candleTarget))*Math.min(1,dt*(candleTarget?4.0:3.0));
 
-    S.listening=!!(S.keys.KeyF||S.gamepad.listen||S.hidden);
+    S.listening=!!(S.keys.KeyF||S.gamepad.listen||S.touch?.listen||S.hidden);
     S.listenBlend+=((S.listening?1:0)-(S.listenBlend||0))*Math.min(1,dt*3.9);
     S.listenTime=S.listening?Math.min(4,S.listenTime+dt):Math.max(0,S.listenTime-dt*2);
     movement(dt);S.loud=Math.max(0,S.loud-dt*(S.listening?2.3:1));
-    if(!S.hidden&&(S.mouse||S.gamepad.dig)){
+    if(!S.hidden&&(S.mouse||S.gamepad.dig||S.touch?.dig)){
       const frameAim=getSupportAim();
       if(frameAim){
         const k=key(frameAim.x,frameAim.z);
@@ -5138,13 +5261,13 @@ function v20SetShadowUniforms(){
     $('prologue').classList.remove('hidden');$('prologue').classList.remove('falling');
     $('prologueText').textContent='THE LAST SHIFT';
     $('prologueSub').textContent='An ordinary last shift. Iron against stone. A crack beneath the rails.';
-    $('prologueSkip').textContent='SPACE / ENTER / A  — SKIP';
+    $('prologueSkip').textContent=S.touch?.active?'TAP SCREEN — SKIP':'SPACE / ENTER / A  — SKIP';
   }
   function finishPrologue(){
     if(!S.prologue)return;
     S.prologue=false;S.playing=true;S.paused=false;$('prologue').classList.add('hidden');$('hud').classList.remove('hidden');cue('breath');
-    msg('The floor gave way. You fell into the sealed old mine. Hold F / LT and face the direction that makes smoke curl back toward you.',true);
-    if(!S.gamepad.active)canvas.requestPointerLock?.().catch?.(()=>{});
+    msg(S.touch?.active?'The floor gave way. Hold ◎ LISTEN and turn until the candle smoke curls back toward you.':'The floor gave way. You fell into the sealed old mine. Hold F / LT and face the direction that makes smoke curl back toward you.',true);
+    if(!S.gamepad.active&&!S.touch?.active)canvas.requestPointerLock?.().catch?.(()=>{});
   }
   function prologueFrame(now){
     if(!S.prologue)return;
@@ -5159,6 +5282,7 @@ function v20SetShadowUniforms(){
   function startEscape(){
     if(S.exiting||S.ended)return;
     S.exiting=true;S.playing=false;S.outroBird=false;S.outroKnock=false;S.outroLight=false;sequenceTime=performance.now();$('hud').classList.add('hidden');
+    const escSkip=$('escapeScene').querySelector('.cine-skip');if(escSkip)escSkip.textContent=S.touch?.active?'TAP SCREEN — SKIP SCENE':'SPACE / ENTER / A — SKIP SCENE';
     $('escapeScene').classList.remove('hidden');$('escapeScene').classList.remove('sunrise');$('escapeScene').dataset.stage='cage';cue('hoist');cue('airlock');
     if(S.gamepad.active)rumble(.5,550);
     document.exitPointerLock?.();
@@ -5171,7 +5295,10 @@ function v20SetShadowUniforms(){
   function rumble(strength=.35,duration=160){
     const pad=(navigator.getGamepads?.()||[]).find(p=>p&&p.connected);
     const actuator=pad&&(pad.vibrationActuator||pad.hapticActuators?.[0]);
-    if(!actuator)return;
+    if(!actuator){
+      if(S.touch?.active&&navigator.vibrate){try{navigator.vibrate(Math.max(18,Math.min(400,Math.round(duration*Math.min(1,strength+.25)))));}catch(e){}}
+      return;
+    }
     try{if(actuator.playEffect)actuator.playEffect('dual-rumble',{duration,strongMagnitude:strength,weakMagnitude:strength*.65});else if(actuator.pulse)actuator.pulse(strength,duration);}catch(e){}
   }
 
@@ -5227,7 +5354,7 @@ function v20SetShadowUniforms(){
       v12NextBreath=now+Math.max(1.3,(m.kind==='skitter'?1.6:2.8)+Math.random()*2.2);
     }
   }
-  function end(success,title,detail,creatureKind=null){S.ended=true;S.playing=false;S.win=success;
+  function end(success,title,detail,creatureKind=null){S.ended=true;S.playing=false;S.win=success;clearTouchInputs();
     clearTimeout(S.finishTimer);
     const finish=$('finish'),rush=$('deathRush');
     finish.classList.add('hidden');
@@ -5259,13 +5386,13 @@ function v20SetShadowUniforms(){
     for(const mesh of v31Scars.values())if(gl&&mesh?.buf)gl.deleteBuffer(mesh.buf);
     v31Scars.clear();v19DamageMesh=null;v19DamageKey='';v19DamageTarget=null;
     clearTimeout(S.finishTimer);$('deathRush')?.classList.remove('active');stressAccum=0;roofProbeClock=0;roofCueClock=0;document.body.classList.remove('inside-cart');soundAt=0;nearBeats=0;wetAmbienceAt=0;railAmbienceAt=0;
-    v12NextEvent=0;v12NextBreath=0;
+    v12NextEvent=0;v12NextBreath=0;clearTouchInputs();
     if(audio&&audioEnabled){audio.subGain?.gain.setTargetAtTime(.04,audio.ctx.currentTime,.08);audio.droneGain?.gain.setTargetAtTime(.065,audio.ctx.currentTime,.08);}$('liftPrompt').classList.add('hidden');generate();worldBuild();$('finish').classList.add('hidden');$('intro').classList.add('hidden');
     $('pause').classList.add('hidden');$('hud').classList.remove('hidden');$('mapWrap').classList.add('hidden');
     $('hud').style.opacity='1';$('escapeScene').classList.add('hidden');startPrologue();
   }
-  function pause(){if(!S.started||S.ended||S.prologue||S.exiting)return;S.playing=false;S.paused=true;$('pause').classList.remove('hidden');}
-  function resume(){if(S.ended||S.prologue||S.exiting)return;S.playing=true;S.paused=false;$('pause').classList.add('hidden');if(!S.gamepad.active)canvas.requestPointerLock?.();}
+  function pause(){if(!S.started||S.ended||S.prologue||S.exiting)return;clearTouchInputs();S.playing=false;S.paused=true;$('pause').classList.remove('hidden');}
+  function resume(){if(S.ended||S.prologue||S.exiting)return;clearTouchInputs();S.playing=true;S.paused=false;$('pause').classList.add('hidden');if(!S.gamepad.active&&!S.touch?.active)canvas.requestPointerLock?.().catch?.(()=>{});}
   function toggleMap(){S.mapOpen=!S.mapOpen;$('mapWrap').classList.toggle('hidden',!S.mapOpen);drawMap();}
   function toggleCandle(){if(S.wax<=0){msg('No wax left.');return;}S.candle=!S.candle;msg(S.candle?'The candle catches. Watch how the air moves.':'The flame is smothered. The dark takes you in.');cue('switch');}
   function pollGamepad(dt){
@@ -5324,6 +5451,243 @@ function v20SetShadowUniforms(){
       if(e.code==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();v32SetStory(v32StoryIndex-1);}
     }
   });
+  function clearTouchInputs(){
+    if(!S.touch)return;
+    S.touch.x=0;S.touch.y=0;S.touch.sprint=false;S.touch.runBtn=false;S.touch.stickSprint=false;
+    S.touch.dig=false;S.touch.listen=false;S.touch.interact=false;
+    S.touch.moveId=null;S.touch.lookId=null;
+    const base=$('touchStickBase'),knob=$('touchStickKnob');
+    if(base){base.classList.remove('engaged','sprinting');base.style.left='';base.style.top='';base.style.bottom='';}
+    if(knob)knob.style.transform='translate3d(0,0,0)';
+    for(const id of ['touchDigBtn','touchListenBtn','touchRunBtn','touchUseBtn'])$(id)?.classList.remove('held');
+  }
+  function enableTouchMode(){
+    if(!S.touch||S.touch.active)return;
+    S.touch.active=true;
+    document.body.classList.add('touch-mode');
+    const foot=document.querySelector('#intro .footer-left span:first-child');
+    if(foot)foot.textContent='LEFT THUMB MOVE · RIGHT DRAG LOOK · HOLD ◎ LISTEN';
+    const pStats=document.querySelector('#pause .pause-stats');
+    if(pStats)pStats.textContent='LEFT STICK MOVE (EDGE = SPRINT) · RIGHT DRAG LOOK · HOLD ⚒ DIG · HOLD ◎ LISTEN · 🕯 CANDLE · 🧨 TNT · 🗺 MAP';
+    const mapNote=$('mapFootNote');
+    if(mapNote)mapNote.textContent='Gold: timber · Red: cave-in · Tap map to close';
+    const storyHint=document.querySelector('#v10Brief .story-hint');
+    if(storyHint)storyHint.textContent='TAP THE SCENE TO ADVANCE · TAP BEGIN BELOW';
+    const helpGrid=$('v9HelpGrid');
+    if(helpGrid&&!helpGrid.dataset.touchAdapted){
+      helpGrid.dataset.touchAdapted='true';
+      helpGrid.innerHTML=`<div class="v9Control"><kbd>LEFT STICK</kbd><span>Move through galleries<small>Push to outer ring or hold » RUN to sprint</small></span></div><div class="v9Control"><kbd>RIGHT DRAG</kbd><span>Look around freely<small>Swipe anywhere on the right side (even while holding actions)</small></span></div><div class="v9Control"><kbd>HOLD ⚒ DIG</kbd><span>Dig rock or break timber<small>Excavates soft/slate seams · 3 strikes collapse a timber bay</small></span></div><div class="v9Control"><kbd>HOLD ◎ LISTEN</kbd><span>Stand still &amp; read the smoke<small>Turn while holding until candle smoke curls back toward you</small></span></div><div class="v9Control"><kbd>⛭ HIDE / WIND</kbd><span>Hide in cart or crank the lift<small>Tap near an ore cart to hide · Hold at the exit hoist to escape</small></span></div><div class="v9Control"><kbd>🕯 FLAME</kbd><span>Cover / uncover candle<small>Conserves wax &amp; hides light from the Mourner</small></span></div><div class="v9Control"><kbd>🧨 TNT</kbd><span>Plant rare TNT charge<small>Breaches solid basalt or seals pursuit · Retreat before blast</small></span></div><div class="v9Control"><kbd>🗺 MAP / ❚❚</kbd><span>Chalk map &amp; pause<small>Shows discovered galleries · Tap map again to close</small></span></div>`;
+    }
+  }
+  function updateTouchHUD(rock,beam,liftNear,lit){
+    if(!S.touch?.active)return;
+    const candleBtn=$('touchCandleBtn'),tntBtn=$('touchTntBtn'),tntNum=$('touchTntNum'),mapBtn=$('touchMapBtn');
+    const digBtn=$('touchDigBtn'),digLbl=$('touchDigLbl'),useBtn=$('touchUseBtn'),useLbl=$('touchUseLbl'),useIco=$('touchUseIco');
+    if(candleBtn){candleBtn.classList.toggle('lit',!!lit);candleBtn.classList.toggle('dim',S.wax<=0);}
+    if(tntNum)tntNum.textContent=String(S.tnt);
+    if(tntBtn)tntBtn.classList.toggle('dim',S.tnt<1||!!S.fuse||S.hidden);
+    if(mapBtn)mapBtn.classList.toggle('lit',!!S.mapOpen);
+    if(digBtn&&digLbl){
+      const canWork=!S.hidden&&((rock&&rock.cost<99)||!!beam);
+      digBtn.classList.toggle('ready',canWork&&!S.touch.dig);
+      digLbl.textContent=beam?'TIMBER':rock?(rock.cost>=99?'BASALT':'DIG'):'DIG';
+    }
+    if(useBtn&&useLbl&&useIco){
+      const cart=S.hidden?S.hidingCart:nearestCart();
+      if(liftNear&&!S.hidden){
+        useBtn.classList.add('ready');useIco.textContent='⛭';useLbl.textContent='WIND';
+      }else if(cart){
+        useBtn.classList.add('ready');useIco.textContent=S.hidden?'⤴':'⛨';useLbl.textContent=S.hidden?'LEAVE':'HIDE';
+      }else{
+        useBtn.classList.remove('ready');useIco.textContent='⛨';useLbl.textContent='HIDE';
+      }
+    }
+  }
+  function setupTouchControls(){
+    const coarse=window.matchMedia?.('(pointer: coarse)')?.matches||('ontouchstart' in window && window.innerWidth<=1024);
+    if(coarse)enableTouchMode();
+    const unlockTouchAudio=()=>{
+      enableTouchMode();
+      if(audioEnabled){
+        if(!audio&&(S.started||S.prologue||S.playing))initAudio();
+        if(audio&&audio.ctx?.state==='suspended')audio.ctx.resume?.().catch?.(()=>{});
+      }
+    };
+    document.addEventListener('touchstart',unlockTouchAudio,{passive:true});
+
+    const applyTouchLookDelta=(dx,dy)=>{
+      if(!S.playing)return;
+      const scale=window.innerWidth<500?.0058:.0048;
+      S.yaw+=dx*scale;
+      S.pitch=Math.max(-1.28,Math.min(1.28,S.pitch-dy*scale*.84));
+    };
+
+    // Left virtual analog thumbstick with floating origin + outer-ring sprint
+    const moveZone=$('touchMoveZone'),stickBase=$('touchStickBase'),stickKnob=$('touchStickKnob'),moveHint=$('touchMoveHint');
+    let stickOriginX=0,stickOriginY=0;
+    const maxRadius=()=>window.innerWidth<480?42:48;
+    if(moveZone&&stickBase&&stickKnob){
+      moveZone.addEventListener('touchstart',e=>{
+        enableTouchMode();e.preventDefault();
+        if(S.touch.moveId!==null)return;
+        const t=e.changedTouches[0];if(!t)return;
+        S.touch.moveId=t.identifier;
+        const rect=moveZone.getBoundingClientRect(),r=maxRadius()+14;
+        stickOriginX=Math.max(r,Math.min(rect.width-r,t.clientX-rect.left));
+        stickOriginY=Math.max(r,Math.min(rect.height-r,t.clientY-rect.top));
+        const bw=stickBase.offsetWidth||112,bh=stickBase.offsetHeight||112;
+        stickBase.style.left=(stickOriginX-bw*.5)+'px';
+        stickBase.style.top=(stickOriginY-bh*.5)+'px';
+        stickBase.style.bottom='auto';
+        stickBase.classList.add('engaged');
+        stickKnob.style.transform='translate3d(0,0,0)';
+      },{passive:false});
+
+      moveZone.addEventListener('touchmove',e=>{
+        if(S.touch.moveId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          const t=e.changedTouches[i];
+          if(t.identifier!==S.touch.moveId)continue;
+          e.preventDefault();
+          const rect=moveZone.getBoundingClientRect();
+          const dx=(t.clientX-rect.left)-stickOriginX,dy=(t.clientY-rect.top)-stickOriginY;
+          const maxR=maxRadius(),d=Math.hypot(dx,dy),clamped=Math.min(maxR,d),ang=Math.atan2(dy,dx);
+          const kx=Math.cos(ang)*clamped,ky=Math.sin(ang)*clamped;
+          stickKnob.style.transform=`translate3d(${kx.toFixed(1)}px,${ky.toFixed(1)}px,0)`;
+          const norm=d/maxR,dead=.12;
+          const mag=norm<dead?0:Math.min(1,(norm-dead)/(1-dead));
+          S.touch.x=Math.cos(ang)*mag;
+          S.touch.y=Math.sin(ang)*mag;
+          S.touch.stickSprint=norm>.86;
+          S.touch.sprint=!!(S.touch.runBtn||S.touch.stickSprint);
+          stickBase.classList.toggle('sprinting',S.touch.sprint&&mag>.2);
+          if(mag>.25)moveHint?.classList.add('hide');
+          break;
+        }
+      },{passive:false});
+
+      const endStick=e=>{
+        if(S.touch.moveId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          if(e.changedTouches[i].identifier===S.touch.moveId){
+            e.preventDefault();
+            S.touch.moveId=null;S.touch.x=0;S.touch.y=0;S.touch.stickSprint=false;
+            S.touch.sprint=!!S.touch.runBtn;
+            stickBase.classList.remove('engaged','sprinting');
+            stickBase.style.left='';stickBase.style.top='';stickBase.style.bottom='';
+            stickKnob.style.transform='translate3d(0,0,0)';
+            break;
+          }
+        }
+      };
+      moveZone.addEventListener('touchend',endStick,{passive:false});
+      moveZone.addEventListener('touchcancel',endStick,{passive:false});
+    }
+
+    // Right / full-screen free-look touch pad
+    const lookZone=$('touchLookZone');
+    if(lookZone){
+      lookZone.addEventListener('touchstart',e=>{
+        enableTouchMode();e.preventDefault();
+        if(S.touch.lookId!==null)return;
+        const t=e.changedTouches[0];if(!t)return;
+        S.touch.lookId=t.identifier;
+        S.touch.lookLastX=t.clientX;S.touch.lookLastY=t.clientY;
+      },{passive:false});
+      lookZone.addEventListener('touchmove',e=>{
+        if(S.touch.lookId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          const t=e.changedTouches[i];
+          if(t.identifier!==S.touch.lookId)continue;
+          e.preventDefault();
+          applyTouchLookDelta(t.clientX-S.touch.lookLastX,t.clientY-S.touch.lookLastY);
+          S.touch.lookLastX=t.clientX;S.touch.lookLastY=t.clientY;
+          break;
+        }
+      },{passive:false});
+      const endLook=e=>{
+        if(S.touch.lookId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          if(e.changedTouches[i].identifier===S.touch.lookId){
+            e.preventDefault();S.touch.lookId=null;break;
+          }
+        }
+      };
+      lookZone.addEventListener('touchend',endLook,{passive:false});
+      lookZone.addEventListener('touchcancel',endLook,{passive:false});
+    }
+
+    // Hold-buttons that ALSO allow thumb-drag camera aiming while held (critical for LISTEN + turning & DIG + aiming!)
+    const bindHoldButton=(el,onPress,onRelease)=>{
+      if(!el)return;
+      let activeId=null,lx=0,ly=0;
+      el.addEventListener('touchstart',e=>{
+        enableTouchMode();initAudio();e.preventDefault();e.stopPropagation();
+        if(activeId!==null)return;
+        const t=e.changedTouches[0];if(!t)return;
+        activeId=t.identifier;lx=t.clientX;ly=t.clientY;
+        el.classList.add('held');onPress();
+      },{passive:false});
+      el.addEventListener('touchmove',e=>{
+        if(activeId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          const t=e.changedTouches[i];
+          if(t.identifier!==activeId)continue;
+          e.preventDefault();e.stopPropagation();
+          applyTouchLookDelta(t.clientX-lx,t.clientY-ly);
+          lx=t.clientX;ly=t.clientY;
+          break;
+        }
+      },{passive:false});
+      const release=e=>{
+        if(activeId===null)return;
+        for(let i=0;i<e.changedTouches.length;i++){
+          if(e.changedTouches[i].identifier===activeId){
+            e.preventDefault();e.stopPropagation();
+            activeId=null;el.classList.remove('held');onRelease();
+            break;
+          }
+        }
+      };
+      el.addEventListener('touchend',release,{passive:false});
+      el.addEventListener('touchcancel',release,{passive:false});
+    };
+
+    bindHoldButton($('touchDigBtn'),()=>{S.touch.dig=true;},()=>{S.touch.dig=false;});
+    bindHoldButton($('touchListenBtn'),()=>{S.touch.listen=true;},()=>{S.touch.listen=false;});
+    bindHoldButton($('touchRunBtn'),()=>{S.touch.runBtn=true;S.touch.sprint=true;},()=>{S.touch.runBtn=false;S.touch.sprint=!!S.touch.stickSprint;});
+    bindHoldButton($('touchUseBtn'),()=>{
+      if(!S.playing||S.ended||S.exiting)return;
+      const atLift=dist(S.player,center(S.exit.x,S.exit.z))<2.25;
+      if(atLift&&!S.hidden){S.touch.interact=true;}
+      else{toggleHide();}
+    },()=>{S.touch.interact=false;});
+    // Also allow pressing & holding directly on the center #liftPrompt banner to crank the hoist
+    bindHoldButton($('liftPrompt'),()=>{S.touch.interact=true;},()=>{S.touch.interact=false;});
+
+    const bindTapButton=(el,fn)=>{
+      if(!el)return;
+      el.addEventListener('touchstart',e=>{
+        enableTouchMode();initAudio();e.preventDefault();e.stopPropagation();
+        el.classList.add('held');fn();
+      },{passive:false});
+      const up=e=>{e.preventDefault();e.stopPropagation();el.classList.remove('held');};
+      el.addEventListener('touchend',up,{passive:false});
+      el.addEventListener('touchcancel',up,{passive:false});
+    };
+    bindTapButton($('touchCandleBtn'),()=>{if(S.playing)toggleCandle();});
+    bindTapButton($('touchTntBtn'),()=>{if(S.playing)plantTNT();});
+    bindTapButton($('touchMapBtn'),()=>{if(S.playing)toggleMap();});
+    bindTapButton($('touchHelpBtn'),()=>{v9ToggleHelp();});
+    bindTapButton($('touchPauseBtn'),()=>{if(S.playing)pause();else if(S.paused)resume();});
+
+    // Tap discovered chalk map to close it cleanly on phones
+    $('mapWrap')?.addEventListener('touchend',e=>{if(S.mapOpen){e.preventDefault();toggleMap();}},{passive:false});
+    $('prologue')?.addEventListener('touchend',e=>{if(S.prologue){e.preventDefault();initAudio();finishPrologue();}},{passive:false});
+    $('escapeScene')?.addEventListener('touchend',e=>{if(S.exiting){e.preventDefault();finishEscape();}},{passive:false});
+    window.addEventListener('orientationchange',()=>{clearTouchInputs();setTimeout(resize,80);});
+    window.visualViewport?.addEventListener('resize',resize);
+  }
   function setupInput(){
     document.addEventListener('keydown',e=>{if(['KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','KeyC','KeyM','KeyF','KeyR','ShiftLeft','ShiftRight','ArrowUp','ArrowDown','Space','Tab'].includes(e.code))e.preventDefault();S.keys[e.code]=true;
       if(e.repeat)return;
@@ -5333,28 +5697,29 @@ function v20SetShadowUniforms(){
       if(e.code==='KeyE')toggleHide();if(e.code==='KeyR')plantTNT();if(e.code==='KeyC')toggleCandle();if(e.code==='KeyM')toggleMap();
     });
     document.addEventListener('keyup',e=>{S.keys[e.code]=false;});
-    document.addEventListener('mousemove',e=>{if(!S.playing)return;const locked=document.pointerLockElement===canvas;const dragging=!locked&&S.mouse&&e.target===canvas;if(!locked&&!dragging)return;S.yaw+=e.movementX*.0027;S.pitch=Math.max(-1.28,Math.min(1.28,S.pitch-e.movementY*.0022));});
-    document.addEventListener('mousedown',e=>{if(S.playing&&e.button===0){S.mouse=true;}});
+    document.addEventListener('mousemove',e=>{if(!S.playing||S.touch?.active)return;const locked=document.pointerLockElement===canvas;const dragging=!locked&&S.mouse&&e.target===canvas;if(!locked&&!dragging)return;S.yaw+=e.movementX*.0027;S.pitch=Math.max(-1.28,Math.min(1.28,S.pitch-e.movementY*.0022));});
+    document.addEventListener('mousedown',e=>{if(S.playing&&e.button===0&&!S.touch?.active&&!e.target?.closest?.('button,#touchControls,#mapWrap,#v9Help,.screen')){S.mouse=true;}});
     document.addEventListener('mouseup',e=>{if(e.button===0)S.mouse=false;});
-    window.addEventListener('blur',()=>{S.mouse=false;S.keys={};if(S.playing)document.exitPointerLock?.();});
+    window.addEventListener('blur',()=>{S.mouse=false;S.keys={};clearTouchInputs();if(S.playing)document.exitPointerLock?.();});
     let heldPointerLock=false;
     document.addEventListener('pointerlockchange',()=>{
       if(document.pointerLockElement===canvas){heldPointerLock=true;return;}
       // Only a lock that was successfully acquired may trigger an automatic pause.
       // Denied pointer lock must never trap the player at the start.
-      if(heldPointerLock&&S.started&&S.playing&&!S.ended&&!S.gamepad.active)pause();
+      if(heldPointerLock&&S.started&&S.playing&&!S.ended&&!S.gamepad.active&&!S.touch?.active)pause();
       heldPointerLock=false;
     });
-    canvas.addEventListener('click',()=>{if(S.playing&&document.pointerLockElement!==canvas)canvas.requestPointerLock?.().catch?.(()=>{});});
+    canvas.addEventListener('click',()=>{if(S.playing&&!S.touch?.active&&document.pointerLockElement!==canvas)canvas.requestPointerLock?.().catch?.(()=>{});});
     $('startBtn').addEventListener('click',()=>{v10StartGame();});
     $('prologue').addEventListener('click',()=>finishPrologue());$('escapeScene').addEventListener('click',()=>finishEscape());
     $('resumeBtn').addEventListener('click',()=>{initAudio();resume();});
     $('retryBtn').addEventListener('click',()=>{initAudio();reset();});
-    $('menuBtn').addEventListener('click',()=>{S.started=false;S.playing=false;S.ended=false;$('finish').classList.add('hidden');$('intro').classList.remove('hidden');$('hud').classList.add('hidden');});
+    $('menuBtn').addEventListener('click',()=>{clearTouchInputs();S.started=false;S.playing=false;S.ended=false;$('finish').classList.add('hidden');$('intro').classList.remove('hidden');$('hud').classList.add('hidden');});
     $('soundBtn').addEventListener('click',()=>{audioEnabled=!audioEnabled;$('soundBtn').textContent=audioEnabled?'SOUND ON':'SOUND OFF';if(audio)audio.gain.gain.value=audioEnabled?MASTER_GAIN:0;});
     for(let el of document.querySelectorAll('[data-notes]'))el.addEventListener('click',()=>{v9ToggleHelp(true);});
     $('artBtn').addEventListener('click',()=>{$('artModal').classList.remove('hidden');});$('artClose').addEventListener('click',()=>{$('artModal').classList.add('hidden');});
     document.addEventListener('keydown',e=>{if(e.code==='Escape'&&!$('artModal').classList.contains('hidden'))$('artModal').classList.add('hidden');});
+    setupTouchControls();
   }
   function downgradeRenderer(reason){
     if(!gl&&document.body.classList.contains('software-render'))return;
@@ -5362,7 +5727,7 @@ function v20SetShadowUniforms(){
     gl=null;program=null;staticMesh=null;artProgram=null;artTexture=null;glReady=true;
     const old=canvas,next=document.createElement('canvas');next.id='world';next.setAttribute('aria-label','First-person mine (compatible software renderer)');
     old.parentNode.replaceChild(next,old);canvas=next;
-    canvas.addEventListener('click',()=>{if(S.playing&&document.pointerLockElement!==canvas)canvas.requestPointerLock?.();});
+    canvas.addEventListener('click',()=>{if(S.playing&&!S.touch?.active&&document.pointerLockElement!==canvas)canvas.requestPointerLock?.();});
     document.body.classList.add('software-render');
     if(S.playing)msg('Compatibility graphics mode enabled. Your shift continues.',true);
     resize();
@@ -6108,7 +6473,7 @@ function v20SetShadowUniforms(){
     const onWood = !!S.supports?.has(key(cell.x, cell.z));
     const wet = (cell.x * 31 + cell.z * 53 + cell.x * cell.z * 7) % 13;
     const isWet = (wet === 1 || wet === 8);
-    const sprinting = !!(S.keys.ShiftLeft || S.keys.ShiftRight || S.gamepad.sprint);
+    const sprinting = !!(S.keys.ShiftLeft || S.keys.ShiftRight || S.gamepad.sprint || S.touch?.sprint);
     const gait = sprinting ? 1.24 : 1.0;
     const side = (v30AudioStats.footsteps % 2 ? 1 : -1);
     v30AudioStats.footsteps++;
@@ -6380,31 +6745,32 @@ function v20SetShadowUniforms(){
   function v9Update(now){
     const play=S.started&&S.playing&&!S.ended&&!S.prologue&&!S.exiting;
     document.body.classList.toggle('v9-playing',play);
-    $('v9HelpToggle').style.display=play||S.paused?'block':'none';
+    const touch=!!S.touch?.active;
+    $('v9HelpToggle').style.display=(!touch&&(play||S.paused))?'block':'none';
     if(now>v9MsgExpire)v9Message.classList.remove('active');
     if(!play){v9Action.classList.remove('active');v9Lesson.classList.remove('active');return;}
     const gamepad=S.gamepad.active,aim=getRockAim(),beam=getSupportAim();
     const p=xy(S.player),cell=at(p.x,p.z);
     const nearLift=dist(S.player,center(S.exit.x,S.exit.z))<2.35;const cart=S.hidden?S.hidingCart:nearestCart();
     let text='',sub='',key='',warning=false;
-    if(cart&&!nearLift){key=gamepad?'A':'E';text=S.hidden?'LEAVE THE CART':'HIDE INSIDE THE CART';sub=S.hidden?'Stay quiet. A hunting creature may search here.':'Stop moving and conceal the candle. A hunter that sees you enter may investigate.';}else if(nearLift){key=gamepad?'A':'E';text='HOLD TO WIND THE HOIST';sub='It is loud. Once started, the mine will hear you.';}
-    else if(aim){key=gamepad?'RT':'LMB';
-      if(aim.cost>=99){text='SOLID BEDROCK';sub=S.tnt>0?(gamepad?'RB':'R')+' · Place rare TNT to breach this wall':'Find a fractured seam or another route';warning=true;}
-      
-      else{text='HOLD TO DIG '+(aim.cost===2?'SOFT OCHRE SEAM':aim.c.t===2?'LOOSE RUBBLE':'HARD SLATE VEIN');sub='Permanent pick · Loud echoes · Dust and fractures build as you strike'+(S.tnt>0?' · '+(gamepad?'RB':'R')+' TNT':'');}
-    }else if(beam){key=gamepad?'RT':'LMB';text='STRIKE THE TIMBER';sub=(S._frameStrike?.damage===2?'FRAME BUCKLING — ONE MORE STRIKE':S._frameStrike?.damage===1?'UPRIGHTS SPLIT — TWO STRIKES LEFT':'THREE HITS WILL COLLAPSE THIS GALLERY');warning=true;}
+    if(cart&&!nearLift){key=touch?(S.hidden?'LEAVE':'HIDE'):gamepad?'A':'E';text=S.hidden?'LEAVE THE CART':'HIDE INSIDE THE CART';sub=S.hidden?'Stay quiet. A hunting creature may search here.':'Stop moving and conceal the candle. A hunter that sees you enter may investigate.';}else if(nearLift){key=touch?'WIND':gamepad?'A':'E';text='HOLD TO WIND THE HOIST';sub='It is loud. Once started, the mine will hear you.';}
+    else if(aim){key=touch?'⚒ DIG':gamepad?'RT':'LMB';
+      if(aim.cost>=99){text='SOLID BEDROCK';sub=S.tnt>0?(touch?'🧨 TNT':(gamepad?'RB':'R'))+' · Place rare TNT to breach this wall':'Find a fractured seam or another route';warning=true;}
+      else{text='HOLD TO DIG '+(aim.cost===2?'SOFT OCHRE SEAM':aim.c.t===2?'LOOSE RUBBLE':'HARD SLATE VEIN');sub='Permanent pick · Loud echoes · Dust and fractures build as you strike'+(S.tnt>0?' · '+(touch?'🧨':(gamepad?'RB':'R'))+' TNT':'');}
+    }else if(beam){key=touch?'⚒ DIG':gamepad?'RT':'LMB';text='STRIKE THE TIMBER';sub=(S._frameStrike?.damage===2?'FRAME BUCKLING — ONE MORE STRIKE':S._frameStrike?.damage===1?'UPRIGHTS SPLIT — TWO STRIKES LEFT':'THREE HITS WILL COLLAPSE THIS GALLERY');warning=true;}
     else if(cell&&!cell.original&&!cell.support&&!safeFromBeams(p.x,p.z)){
        text='UNSTABLE EXCAVATION';sub='Listen for falling grit. Leave before it gives way.';warning=true;
-    } // The initial controls card already teaches listening; no permanent tutorial overlay.
+    }
     v9Action.classList.toggle('active',!!text);
     v9Action.classList.toggle('danger',warning);
-    if(text!==v9ContextLast){
+    const ctxKey=key+'|'+text;
+    if(ctxKey!==v9ContextLast){
        v9Label.innerHTML=(key?'<span class="v9key">'+key+'</span>':'')+'<span class="v9label">'+text+'</span>';
-       v9Detail.textContent=sub;v9ContextLast=text;
+       v9Detail.textContent=sub;v9ContextLast=ctxKey;
     }
     const mentor=S.elapsed<5.5 && !v9HelpOpen;
     v9Lesson.classList.toggle('active',mentor);
-    if(mentor){v9Lesson.textContent=S.elapsed<7?'WASD MOVE   ·   MOUSE LOOK   ·   SHIFT SPRINT':S.elapsed<14?'HOLD F / LT TO SEE THE WAY OUT   ·   H OPENS CONTROLS':'DIG SPARINGLY   ·   AVOID UNSTABLE ROOFS   ·   LISTEN FOR BREATHING';}
+    if(mentor){v9Lesson.textContent=touch?'LEFT STICK MOVE   ·   RIGHT DRAG LOOK   ·   HOLD ◎ LISTEN':(S.elapsed<7?'WASD MOVE   ·   MOUSE LOOK   ·   SHIFT SPRINT':S.elapsed<14?'HOLD F / LT TO SEE THE WAY OUT   ·   H OPENS CONTROLS':'DIG SPARINGLY   ·   AVOID UNSTABLE ROOFS   ·   LISTEN FOR BREATHING');}
   }
 
   // V10–V16: real recorded directional acoustic focus & deep gallery foley
@@ -6537,7 +6903,7 @@ function v20SetShadowUniforms(){
       lastRender=now;
     }
   }
-  window.__DESCENT_DEBUG__={hoistParts:()=>HOIST_RAILS.length,guide:()=>S._guideWind,guideField:()=>S._guideField,roof:()=>roofThreat,probeRoof,v30Footstep,v30MetalRing,v30AudioStats,v13PickEcho,updateUI,rockCuts:()=>S.rockCuts,scars:()=>v31Scars,crack:()=>v19DamageTarget,rockAim:getRockAim,nearestCart,toggleHide,placeHideCarts,START, floorRelief,lightLine,updateVisibilityTexture,visibility:()=>visibleData,state:S,wind:sampleWind,v14Guidance,v14OrganicBuffer,v14DeathCue,v14MonsterCall,v16ChargeScream,soundSamples:()=>({previous:Object.keys(v15Buffers),v17:Object.keys(v17Buffers)}),airfield:()=>S.airfield,at,open,mine,support,collapse,reset,v17PlayFX,v17Environment,plantTNT,explodeTNT,breakBeam,fuseUpdate,trackEdge,ventilationField,spawnCreature,monsterUpdate,stressUpdate,spawnDust,rayVisible,soundDistance,updateLift,directorUpdate,initAudio,worldBuild,startEscape,finishEscape,renderCinematic,buildCinematics,render,_jumpCinematic:(seconds)=>{sequenceTime=performance.now()-seconds*1000}};
+  window.__DESCENT_DEBUG__={enableTouchMode,clearTouchInputs,updateTouchHUD,hoistParts:()=>HOIST_RAILS.length,guide:()=>S._guideWind,guideField:()=>S._guideField,roof:()=>roofThreat,probeRoof,v30Footstep,v30MetalRing,v30AudioStats,v13PickEcho,updateUI,rockCuts:()=>S.rockCuts,scars:()=>v31Scars,crack:()=>v19DamageTarget,rockAim:getRockAim,nearestCart,toggleHide,placeHideCarts,START, floorRelief,lightLine,updateVisibilityTexture,visibility:()=>visibleData,state:S,wind:sampleWind,v14Guidance,v14OrganicBuffer,v14DeathCue,v14MonsterCall,v16ChargeScream,soundSamples:()=>({previous:Object.keys(v15Buffers),v17:Object.keys(v17Buffers)}),airfield:()=>S.airfield,at,open,mine,support,collapse,reset,v17PlayFX,v17Environment,plantTNT,explodeTNT,breakBeam,fuseUpdate,trackEdge,ventilationField,spawnCreature,monsterUpdate,stressUpdate,spawnDust,rayVisible,soundDistance,updateLift,directorUpdate,initAudio,worldBuild,startEscape,finishEscape,renderCinematic,buildCinematics,render,_jumpCinematic:(seconds)=>{sequenceTime=performance.now()-seconds*1000}};
   try{
     try{initGL();}catch(shaderError){
       downgradeRenderer(shaderError?.message||shaderError);
